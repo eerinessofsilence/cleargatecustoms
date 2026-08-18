@@ -1,6 +1,7 @@
 import { Send, X } from 'lucide-react';
 import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { ApiError, createLead } from '../api/client';
+import { trackEvent } from '../analytics';
 import type { CalculatorQuote } from '../types';
 import { Button } from './ui/Button';
 import { useTranslation } from '../i18n';
@@ -73,13 +74,15 @@ export function ContactModal({ isOpen, quote, onClose }: Props) {
     setSubmitting(true);
     setStatus('');
     setSubmissionSucceeded(false);
+    const source = quote ? 'calculator_quote' : 'hero_consultation';
     try {
       await createLead({
         ...form,
         phone,
-        source: quote ? 'calculator_quote' : 'hero_consultation',
+        source,
       });
       setSubmissionSucceeded(true);
+      trackEvent('generate_lead', { source });
       setStatus(
         t(`Заявку прийнято до опрацювання. Дякуємо, ${form.firstName}! Зателефонуємо найближчим часом.`, `Your request has been received. Thank you, ${form.firstName}! We will call you shortly.`),
       );
