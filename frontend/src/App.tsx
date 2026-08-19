@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Phone } from 'lucide-react';
 import { Calculator } from './components/Calculator';
+import { ConsentBanner } from './components/ConsentBanner';
 import { ContactModal } from './components/ContactModal';
 import { QuickContactModal } from './components/QuickContactModal';
 import { CoverageMap } from './components/CoverageMap';
@@ -95,6 +96,7 @@ export function App() {
         }}
       />
       <QuickContactModal isOpen={isQuickContactOpen} onClose={() => setIsQuickContactOpen(false)} />
+      <ConsentBanner />
     </>
   );
 }

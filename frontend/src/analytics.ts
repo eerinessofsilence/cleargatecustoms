@@ -1,4 +1,5 @@
 const MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined;
+const CONSENT_KEY = 'cg-analytics-consent';
 
 declare global {
   interface Window {
@@ -7,12 +8,24 @@ declare global {
   }
 }
 
-function isEnabled() {
+let initialized = false;
+
+function isConfigured() {
   return Boolean(MEASUREMENT_ID) && import.meta.env.PROD;
 }
 
-export function initAnalytics() {
-  if (!isEnabled()) return;
+export function isAnalyticsConfigured() {
+  return isConfigured();
+}
+
+export function getConsent(): 'granted' | 'denied' | null {
+  const value = localStorage.getItem(CONSENT_KEY);
+  return value === 'granted' || value === 'denied' ? value : null;
+}
+
+function loadGtag() {
+  if (!isConfigured() || initialized) return;
+  initialized = true;
 
   const script = document.createElement('script');
   script.async = true;
@@ -27,7 +40,20 @@ export function initAnalytics() {
   window.gtag('config', MEASUREMENT_ID);
 }
 
+export function initAnalyticsIfConsented() {
+  if (getConsent() === 'granted') loadGtag();
+}
+
+export function grantConsent() {
+  localStorage.setItem(CONSENT_KEY, 'granted');
+  loadGtag();
+}
+
+export function denyConsent() {
+  localStorage.setItem(CONSENT_KEY, 'denied');
+}
+
 export function trackEvent(name: string, params?: Record<string, unknown>) {
-  if (!isEnabled()) return;
+  if (!isConfigured() || !initialized) return;
   window.gtag('event', name, params);
 }

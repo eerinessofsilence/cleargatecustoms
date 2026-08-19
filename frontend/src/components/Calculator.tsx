@@ -1,6 +1,7 @@
 import { Camera, ChevronLeft, ChevronRight, Phone, RefreshCw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { ApiError, calculateQuote, getUsdExchangeRate } from '../api/client';
+import { trackEvent } from '../analytics';
 import { getContent } from '../data/content';
 import { useTranslation } from '../i18n';
 import type { CalculatorQuote, ExchangeRateResult, QuoteResult } from '../types';
@@ -181,6 +182,7 @@ export function Calculator({ onContact }: Props) {
           if (!isActive) return;
           setRemoteResult({ key: requestKey, value });
           setRemoteError(null);
+          trackEvent('calculate_quote', { product_code: productCode, weight_kg: weightKg });
         })
         .catch((error: unknown) => {
           if (!isActive) return;

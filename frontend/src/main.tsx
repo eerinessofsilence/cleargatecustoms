@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client';
 import './styles/index.css';
 import { App } from './App';
 import { I18nProvider } from './i18n';
-import { initAnalytics } from './analytics';
+import { initAnalyticsIfConsented } from './analytics';
 
-initAnalytics();
+initAnalyticsIfConsented();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
