@@ -2,6 +2,7 @@ import { Phone, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { getContent } from '../data/content';
 import { useTranslation } from '../i18n';
+import { trackEvent } from '../analytics';
 
 type Props = {
   isOpen: boolean;
@@ -71,6 +72,7 @@ export function QuickContactModal({ isOpen, onClose }: Props) {
         <div className="mt-4 grid gap-2.5">
           <a
             href={directContact.phoneHref}
+            onClick={() => trackEvent('contact_click', { method: 'phone' })}
             className="group border-primary/20 flex items-center gap-3 rounded-2xl border bg-white p-3.5 transition hover:bg-[#f4faf7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#085041]"
           >
             <span className="bg-primary grid size-10 place-items-center rounded-xl text-white">
@@ -88,6 +90,7 @@ export function QuickContactModal({ isOpen, onClose }: Props) {
                 href={channel.href}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackEvent('contact_click', { method: channel.name.toLowerCase() })}
                 className="group border-line hover:border-primary/25 flex items-center gap-3 rounded-2xl border p-3.5 transition hover:bg-[#f4faf7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#085041]"
               >
                 <img src={channel.icon} alt="" className="size-10 shrink-0 object-contain" />
