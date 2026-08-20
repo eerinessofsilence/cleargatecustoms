@@ -36,6 +36,14 @@ function loadGtag() {
   window.gtag = function gtag(...args: unknown[]) {
     window.dataLayer.push(args);
   };
+  // loadGtag() only runs after our own consent banner was accepted, so analytics_storage
+  // is granted here; ad-related storage stays denied since this site doesn't use ads/remarketing.
+  window.gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'granted',
+  });
   window.gtag('js', new Date());
   window.gtag('config', MEASUREMENT_ID);
 }
